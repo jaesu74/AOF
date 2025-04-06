@@ -1,43 +1,302 @@
-# AllOneFlow API 문서
+# AllOneFlow
 
-이 저장소는 AllOneFlow 시스템의 API 문서를 제공합니다.
+계약 자동화, 정산 관리, AI 기반 이상 지출 탐지, 자동 보고서 생성 기능을 제공하는 통합 관리 시스템입니다.
 
-## API 문서 접근 방법
+## 주요 기능
 
-API 문서는 다음 URL에서 접근할 수 있습니다:
-- [https://api.aof.wvl.co.kr](https://api.aof.wvl.co.kr)
+1. **계약 자동화**
+   - 표준 템플릿 기반의 계약서 자동 생성
+   - 고객 정보, 계약 조건 등 자동 치환
+   - WYSIWYG 스타일의 템플릿 편집 지원
+   - 표준 근로계약서 제공 및 커스텀 계약서 관리
 
-## 개요
+2. **정산 관리**
+   - ERP/회계 시스템과 RESTful API 연동
+   - 지출 내역, 인보이스, 결제 데이터 실시간 동기화
+   - 표준 스키마 기반 데이터 매핑
+   - 법인카드 명세서 자동 처리 시스템
 
-AllOneFlow API는 회계 관리, 계약 자동화, 보고서 생성 및 법인카드 관리를 위한 RESTful 엔드포인트를 제공합니다.
+3. **AI 기반 이상 지출 탐지**
+   - Isolation Forest 알고리즘 활용
+   - 비정상적인 지출 패턴 자동 탐지
+   - 실시간 모니터링 및 알림
 
-## 주요 엔드포인트
+4. **자동 보고서 생성**
+   - 주간 단위 데이터 집계
+   - PDF 형식의 보고서 자동 생성
+   - 대시보드 스냅샷 포함
+   - 예산 대비 실적 분석 보고서
 
-### 회계 관리
-- 회계연도 관리: `/api/fiscal-years`
-- 계정과목 관리: `/api/accounts`
-- 전표 관리: `/api/journal-entries`
+5. **회계 엑셀 통합**
+   - 엑셀 파일 기반 회계 데이터 처리
+   - 계정과목, 전표 자동 가져오기
+   - 커스텀 회계 엑셀 템플릿 생성
 
-### 보고서 관리
-- 보고서 생성: `/api/reports`
-- 보고서 다운로드: `/api/reports/download/{report_id}`
+6. **ERP 시스템 통합**
+   - 다양한 문서 저장 및 관리
+   - 문서 병합 기능
+   - 회계, 계약, 증빙, 보고서 통합 관리
 
-### 계약 관리
-- 표준 계약서 다운로드: `/api/contracts/standard/download`
-- 계약서 업로드: `/api/contracts/upload`
+## 시스템 요구사항
 
-### 법인카드 관리
-- 법인카드 명세서 업로드: `/api/card-statements/upload`
-- 법인카드 명세서 목록 조회: `/api/card-statements`
+- Python 3.8 이상
+- SQLite 3.x
+- 필요한 Python 패키지는 requirements.txt 참조
 
-### 회계 엑셀
-- 회계 엑셀 다운로드: `/api/excel/accounting/download`
-- 엑셀 파일 업로드: `/api/excel/upload`
+## 설치 방법
 
-## 인증
+1. 저장소 클론
+   ```bash
+   git clone https://github.com/your-username/alloneflow.git
+   cd alloneflow
+   ```
 
-현재 버전에서는 API 키 인증이 필요하지 않습니다. 향후 릴리스에서 인증 메커니즘이 추가될 예정입니다.
+2. 가상환경 생성 및 활성화
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   venv\Scripts\activate     # Windows
+   ```
 
-## 자세한 정보
+3. 필요한 패키지 설치
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-더 자세한 내용은 [AllOneFlow 홈페이지](https://aof.wvl.co.kr)를 방문하세요. 
+4. 환경 변수 설정
+   ```bash
+   cp .env.example .env
+   # .env 파일을 열어 필요한 설정값 입력
+   ```
+
+## 서버 배포 및 설정 방법
+
+### 서버 설정
+
+1. 웹 서버와 API 서버 설정
+   ```bash
+   # Nginx 설치 (Ubuntu 기준)
+   sudo apt update
+   sudo apt install nginx
+
+   # Nginx 설정
+   sudo nano /etc/nginx/sites-available/aof.wvl.co.kr
+   ```
+
+2. Nginx 설정 파일 예시
+   ```nginx
+   # 웹 서버 설정
+   server {
+       listen 80;
+       server_name aof.wvl.co.kr;
+       
+       location / {
+           root /var/www/aof/static;
+           index index.html;
+           try_files $uri $uri/ /index.html;
+       }
+   }
+
+   # API 서버 설정
+   server {
+       listen 80;
+       server_name api.aof.wvl.co.kr;
+       
+       location / {
+           proxy_pass http://localhost:5000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+3. Nginx 설정 활성화 및 재시작
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/aof.wvl.co.kr /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo service nginx restart
+   ```
+
+4. 인증서 설정 (HTTPS)
+   ```bash
+   sudo apt install certbot python3-certbot-nginx
+   sudo certbot --nginx -d aof.wvl.co.kr -d api.aof.wvl.co.kr
+   ```
+
+### 애플리케이션 배포
+
+1. 서버에 코드 배포
+   ```bash
+   cd /var/www
+   git clone https://github.com/jaesu74/AOF.git aof
+   cd aof
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. API 서버 실행 (Gunicorn 사용)
+   ```bash
+   pip install gunicorn
+   gunicorn -w 4 -b 0.0.0.0:5000 api.app:app
+   ```
+
+3. 서비스 자동 시작 설정 (systemd)
+   ```bash
+   sudo nano /etc/systemd/system/aof.service
+   ```
+   
+   서비스 파일 내용:
+   ```
+   [Unit]
+   Description=AOF API Server
+   After=network.target
+
+   [Service]
+   User=www-data
+   WorkingDirectory=/var/www/aof
+   ExecStart=/var/www/aof/venv/bin/gunicorn -w 4 -b 0.0.0.0:5000 api.app:app
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+4. 서비스 활성화 및 시작
+   ```bash
+   sudo systemctl enable aof
+   sudo systemctl start aof
+   sudo systemctl status aof
+   ```
+
+5. 정적 파일 복사
+   ```bash
+   mkdir -p /var/www/aof/static
+   cp -r api/static/* /var/www/aof/static/
+   ```
+
+6. 설정 업데이트 후 서비스 재시작
+   ```bash
+   sudo systemctl restart aof
+   ```
+
+### DNS 설정
+
+1. DNS 레코드 설정 (예: CloudFlare, Route53 등)
+   - aof.wvl.co.kr: 웹 서버 IP 주소
+   - api.aof.wvl.co.kr: API 서버 IP 주소
+
+## 사용 방법
+
+1. 서버 실행
+   ```bash
+   python -m api.app
+   ```
+
+2. 웹 인터페이스 접속
+   - 브라우저에서 http://localhost:5000 접속
+
+3. API 엔드포인트
+   - 계약 생성: POST /api/contracts
+   - 거래 내역 동기화: POST /api/transactions/sync
+   - 주간 보고서 생성: POST /api/reports/weekly
+   - 보고서 다운로드: GET /api/reports/download/{report_id}
+   - 회계 엑셀 다운로드: GET /api/excel/accounting/download
+   - 카드명세서 업로드: POST /api/card-statements/upload
+
+## API 사용 예시
+
+1. 계약 생성
+   ```bash
+   curl -X POST http://localhost:5000/api/contracts \
+   -H "Content-Type: application/json" \
+   -d '{
+       "company_name": "테스트 기업",
+       "contact_person": "홍길동",
+       "start_date": "2024-01-01",
+       "end_date": "2024-12-31",
+       "contract_type": "서비스 이용 계약"
+   }'
+   ```
+
+2. 거래 내역 동기화
+   ```bash
+   curl -X POST http://localhost:5000/api/transactions/sync \
+   -H "Content-Type: application/json" \
+   -d '{
+       "start_date": "2024-01-01",
+       "end_date": "2024-01-31"
+   }'
+   ```
+
+3. 법인카드 명세서 업로드
+   ```bash
+   curl -X POST http://localhost:5000/api/card-statements/upload \
+   -F "file=@card_statement.xlsx" \
+   -F "company=shinhan" \
+   -F "month=2024-04"
+   ```
+
+## 프로젝트 구조
+
+```
+AllOneFlow/
+├── api/
+│   ├── app.py                 # Flask API 서버
+│   └── static/                # 정적 파일(HTML, CSS, JS)
+├── contract_automation/
+│   └── contract_generator.py  # 계약서 생성 모듈
+├── erp_integration/
+│   └── erp_connector.py       # ERP 연동 모듈
+├── anomaly_detection/
+│   └── anomaly_detector.py    # 이상 탐지 모듈
+├── report_generation/
+│   └── report_generator.py    # 보고서 생성 모듈
+├── accounting/
+│   ├── accounting_manager.py  # 회계 관리 모듈
+│   ├── advanced_accounting_manager.py # 고급 회계 모듈
+│   └── excel_manager.py      # 엑셀 관리 모듈
+├── database/
+│   └── models.py             # 데이터베이스 모델
+├── docs/                     # 문서
+│   └── card_statement_report.md  # 법인카드 명세서 파싱 보고서
+├── tests/                    # 테스트 코드
+├── requirements.txt          # 패키지 의존성
+└── README.md                 # 프로젝트 문서
+```
+
+## 법인카드 명세서 처리
+
+AllOneFlow는 다음 법인카드사의 명세서 처리를 지원합니다:
+- 신한카드 (연동 가능성: ⭐⭐⭐⭐⭐)
+- 국민카드 (연동 가능성: ⭐⭐⭐⭐)
+- 하나카드 (연동 가능성: ⭐⭐⭐)
+- 기업카드 (연동 가능성: ⭐⭐⭐)
+
+지원하는 파일 형식:
+- Excel (.xlsx, .xls)
+- CSV (.csv)
+
+자세한 내용은 `docs/card_statement_report.md` 파일을 참조하세요.
+
+## 회계 엑셀 기능
+
+Excel 파일을 이용한 회계 데이터 관리:
+- 계정과목 가져오기/내보내기
+- 전표 데이터 가져오기/내보내기
+- 커스텀 엑셀 템플릿 생성
+- 법인카드 명세서 자동 파싱
+
+## 라이선스
+
+MIT License
+
+## 기여 방법
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request 

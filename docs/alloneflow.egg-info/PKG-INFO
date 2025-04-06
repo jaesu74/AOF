@@ -1,0 +1,8 @@
+Metadata-Version: 2.2
+Name: alloneflow
+Version: 0.1.0
+Requires-Dist: flask
+Requires-Dist: sqlalchemy
+Requires-Dist: reportlab
+Requires-Dist: scikit-learn
+Dynamic: requires-dist
