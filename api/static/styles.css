@@ -38,11 +38,13 @@ nav ul {
     list-style: none;
     background-color: #eee;
     border-radius: 5px;
-    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
 nav li {
-    flex: 1;
+    flex: 0 0 auto;
 }
 
 nav a {
@@ -200,4 +202,83 @@ th {
 @keyframes fadeout {
     from { bottom: 20px; opacity: 1; }
     to { bottom: 0; opacity: 0; }
+}
+
+/* 정보 박스 스타일 */
+.info-box {
+    background-color: #f0f7ff;
+    border-left: 4px solid #1a3b5d;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.info-box p {
+    margin-bottom: 10px;
+}
+
+.info-box ul {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+/* 체크박스 그룹 스타일 */
+.checkbox-group {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* 다운로드 링크 스타일 */
+.download-link {
+    color: #1a3b5d;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.download-link:hover {
+    text-decoration: underline;
+}
+
+.download-link:before {
+    content: '↓';
+    margin-right: 5px;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header {
+        padding: 15px;
+    }
+    
+    nav a {
+        padding: 10px 15px;
+    }
+    
+    .card {
+        padding: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
 } 
