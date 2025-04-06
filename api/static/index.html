@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllOneFlow - 통합 회계 및 계약 관리 시스템</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="description" content="효율적인 회계 관리, 계약 자동화, AI 기반 분석을 제공하는 올인원 비즈니스 관리 솔루션">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AllOneFlow</h1>
+            <p>통합 회계 및 계약 관리 시스템</p>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#" data-section="accounting" class="active">회계 관리</a></li>
+                <li><a href="#" data-section="report">보고서</a></li>
+                <li><a href="#" data-section="contract">계약 관리</a></li>
+                <li><a href="#" data-section="erp">문서 관리</a></li>
+                <li><a href="#" data-section="excel">회계 엑셀</a></li>
+                <li><a href="#" data-section="card">법인카드 관리</a></li>
+                <li><a href="#" data-section="analysis">분석</a></li>
+                <li><a href="#" data-section="settings">설정</a></li>
+                <li><a href="https://api.aof.wvl.co.kr/api/docs" target="_blank">API 문서</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="fiscal-years" class="active">
+                <h2>회계연도 관리</h2>
+                <div class="card">
+                    <h3>회계연도 생성</h3>
+                    <div class="form-group">
+                        <label for="year">연도:</label>
+                        <input type="number" id="year" min="2000" max="2100" value="2024">
+                        <button id="create-fiscal-year">생성</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>회계연도 목록</h3>
+                    <button id="refresh-fiscal-years">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>연도</th>
+                                    <th>시작일</th>
+                                    <th>종료일</th>
+                                    <th>상태</th>
+                                    <th>작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fiscal-years-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="accounts">
+                <h2>계정과목 관리</h2>
+                <div class="card">
+                    <h3>계정과목 생성</h3>
+                    <div class="form-group">
+                        <label for="account-code">코드:</label>
+                        <input type="text" id="account-code" maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="account-name">이름:</label>
+                        <input type="text" id="account-name" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="account-type">유형:</label>
+                        <select id="account-type">
+                            <option value="ASSET">자산</option>
+                            <option value="LIABILITY">부채</option>
+                            <option value="EQUITY">자본</option>
+                            <option value="REVENUE">수익</option>
+                            <option value="EXPENSE">비용</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="account-description">설명:</label>
+                        <textarea id="account-description" rows="3"></textarea>
+                    </div>
+                    <button id="create-account">생성</button>
+                </div>
+
+                <div class="card">
+                    <h3>계정과목 목록</h3>
+                    <button id="refresh-accounts">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>코드</th>
+                                    <th>이름</th>
+                                    <th>유형</th>
+                                    <th>설명</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accounts-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="journal-entries">
+                <h2>전표 관리</h2>
+                <div class="card">
+                    <h3>전표 생성</h3>
+                    <div class="form-group">
+                        <label for="entry-date">전표일자:</label>
+                        <input type="date" id="entry-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="entry-description">설명:</label>
+                        <textarea id="entry-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="created-by">작성자:</label>
+                        <input type="text" id="created-by">
+                    </div>
+                    <div id="journal-lines">
+                        <h4>전표 라인</h4>
+                        <div class="journal-line">
+                            <div class="form-group">
+                                <label for="account-id-1">계정:</label>
+                                <select id="account-id-1" class="account-select">
+                                    <!-- JavaScript로 옵션 로드 -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="debit-1">차변:</label>
+                                <input type="number" id="debit-1" class="debit" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="credit-1">대변:</label>
+                                <input type="number" id="credit-1" class="credit" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="line-description-1">설명:</label>
+                                <input type="text" id="line-description-1">
+                            </div>
+                        </div>
+                        <button id="add-line">라인 추가</button>
+                    </div>
+                    <div class="form-group totals">
+                        <div>
+                            <label>차변 합계:</label>
+                            <span id="total-debit">0</span>
+                        </div>
+                        <div>
+                            <label>대변 합계:</label>
+                            <span id="total-credit">0</span>
+                        </div>
+                    </div>
+                    <button id="create-journal-entry">전표 생성</button>
+                </div>
+            </section>
+
+            <!-- 보고서 생성 섹션 -->
+            <section id="reports">
+                <h2>보고서 생성</h2>
+                <div class="card">
+                    <h3>예산 및 회계 중간 보고서</h3>
+                    <div class="form-group">
+                        <label for="report-fiscal-year">회계연도:</label>
+                        <select id="report-fiscal-year">
+                            <!-- JavaScript로 옵션 로드 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-type">보고서 유형:</label>
+                        <select id="report-type">
+                            <option value="BUDGET_VS_ACTUAL">예산 대비 실적</option>
+                            <option value="FINANCIAL_STATEMENT">재무제표</option>
+                            <option value="CASH_FLOW">현금흐름표</option>
+                            <option value="TAX_SUMMARY">세금 요약</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-period-start">기간 시작:</label>
+                        <input type="date" id="report-period-start">
+                    </div>
+                    <div class="form-group">
+                        <label for="report-period-end">기간 종료:</label>
+                        <input type="date" id="report-period-end">
+                    </div>
+                    <button id="generate-report">보고서 생성</button>
+                </div>
+                <div class="card">
+                    <h3>보고서 목록</h3>
+                    <button id="refresh-reports">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>유형</th>
+                                    <th>생성일</th>
+                                    <th>기간</th>
+                                    <th>다운로드</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reports-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 계약 관리 섹션 -->
+            <section id="contracts">
+                <h2>계약 관리</h2>
+                <div class="card">
+                    <h3>표준 근로 계약서</h3>
+                    <div class="info-box">
+                        <p>표준 근로 계약서는 근로기준법에 따라 고용주와 근로자 간의 근로 조건을 명확히 정의한 문서입니다. 다음 필수 항목들을 포함하고 있습니다:</p>
+                        <ul>
+                            <li>근로 계약 기간</li>
+                            <li>근무 장소 및 업무 내용</li>
+                            <li>근로 시간 및 휴게 시간</li>
+                            <li>임금 지급 방법 및 시기</li>
+                            <li>연차 유급휴가</li>
+                            <li>사회보험 적용 여부</li>
+                        </ul>
+                        <p>아래 다운로드 버튼을 통해 표준 근로 계약서 양식을 다운로드할 수 있습니다.</p>
+                    </div>
+                    <button id="download-standard-contract">표준 근로 계약서 다운로드</button>
+                </div>
+                
+                <div class="card">
+                    <h3>계약서 업로드</h3>
+                    <div class="form-group">
+                        <label for="contract-name">계약서 이름:</label>
+                        <input type="text" id="contract-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contract-description">설명:</label>
+                        <textarea id="contract-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="contract-file">파일 선택:</label>
+                        <input type="file" id="contract-file">
+                    </div>
+                    <button id="upload-contract">업로드</button>
+                </div>
+                
+                <div class="card">
+                    <h3>계약서 목록</h3>
+                    <button id="refresh-contracts">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>이름</th>
+                                    <th>설명</th>
+                                    <th>업로드일</th>
+                                    <th>다운로드</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contracts-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ERP 시스템 통합 섹션 -->
+            <section id="erp-integration">
+                <h2>ERP 시스템 통합</h2>
+                <div class="card">
+                    <h3>문서 저장</h3>
+                    <div class="form-group">
+                        <label for="document-type">문서 유형:</label>
+                        <select id="document-type">
+                            <option value="ACCOUNTING">회계</option>
+                            <option value="CONTRACT">계약</option>
+                            <option value="RECEIPT">증빙</option>
+                            <option value="REPORT">보고서</option>
+                            <option value="OTHER">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="document-name">문서 이름:</label>
+                        <input type="text" id="document-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="document-description">설명:</label>
+                        <textarea id="document-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="document-file">파일 선택:</label>
+                        <input type="file" id="document-file">
+                    </div>
+                    <button id="upload-document">업로드</button>
+                </div>
+                
+                <div class="card">
+                    <h3>문서 병합</h3>
+                    <div class="form-group">
+                        <label for="merge-name">병합 문서 이름:</label>
+                        <input type="text" id="merge-name">
+                    </div>
+                    <div class="form-group">
+                        <label>병합할 문서:</label>
+                        <div id="merge-document-list" class="checkbox-group">
+                            <!-- JavaScript로 문서 목록 로드 -->
+                        </div>
+                    </div>
+                    <button id="merge-documents">문서 병합</button>
+                </div>
+                
+                <div class="card">
+                    <h3>문서 목록</h3>
+                    <button id="refresh-documents">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>유형</th>
+                                    <th>이름</th>
+                                    <th>설명</th>
+                                    <th>업로드일</th>
+                                    <th>다운로드</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documents-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 회계 엑셀 섹션 -->
+            <section id="excel-accounting">
+                <h2>회계 엑셀 관리</h2>
+                <div class="card">
+                    <h3>회계 엑셀 파일 다운로드</h3>
+                    <div class="info-box">
+                        <p>회계 엑셀 파일은 기업의 재무 상태를 추적하고 관리하기 위한 핵심 도구입니다. 다음의 주요 기능을 포함하고 있습니다:</p>
+                        <ul>
+                            <li>계정과목 관리</li>
+                            <li>전표 입력 및 관리</li>
+                            <li>손익계산서 자동 생성</li>
+                            <li>재무상태표 자동 생성</li>
+                            <li>현금흐름표 자동 생성</li>
+                            <li>부가세 신고 자료 작성</li>
+                        </ul>
+                    </div>
+                    <button id="download-accounting-excel">기본 회계 엑셀 다운로드</button>
+                    <button id="download-custom-excel">커스텀 회계 엑셀 다운로드</button>
+                </div>
+                
+                <div class="card">
+                    <h3>엑셀 파일 업로드</h3>
+                    <div class="form-group">
+                        <label for="excel-name">파일 이름:</label>
+                        <input type="text" id="excel-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="excel-description">설명:</label>
+                        <textarea id="excel-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="excel-file">파일 선택:</label>
+                        <input type="file" id="excel-file" accept=".xlsx,.xls">
+                    </div>
+                    <button id="upload-excel">업로드</button>
+                </div>
+                
+                <div class="card">
+                    <h3>엑셀 파일 목록</h3>
+                    <button id="refresh-excel-files">새로고침</button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>이름</th>
+                                    <th>설명</th>
+                                    <th>업로드일</th>
+                                    <th>다운로드</th>
+                                </tr>
+                            </thead>
+                            <tbody id="excel-files-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 법인카드 관리 섹션 -->
+            <section id="card-management">
+                <h2>법인카드 관리</h2>
+                <div class="card">
+                    <h3>카드사 명세서 업로드</h3>
+                    <div class="form-group">
+                        <label for="card-company">카드사:</label>
+                        <select id="card-company">
+                            <option value="shinhan">신한카드</option>
+                            <option value="kookmin">국민카드</option>
+                            <option value="hana">하나카드</option>
+                            <option value="ibk">기업카드</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statement-month">명세서 월:</label>
+                        <input type="month" id="statement-month">
+                    </div>
+                    <div class="form-group">
+                        <label for="card-statement-file">파일 선택:</label>
+                        <input type="file" id="card-statement-file" accept=".xlsx,.xls,.csv,.pdf">
+                    </div>
+                    <button id="upload-card-statement">업로드 및 분석</button>
+                </div>
+                
+                <div class="card">
+                    <h3>법인카드 사용 내역</h3>
+                    <div class="form-group">
+                        <label for="card-statement-filter-month">월별 조회:</label>
+                        <input type="month" id="card-statement-filter-month">
+                        <button id="filter-card-statements">조회</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>날짜</th>
+                                    <th>카드사</th>
+                                    <th>카드번호</th>
+                                    <th>가맹점</th>
+                                    <th>금액</th>
+                                    <th>승인번호</th>
+                                    <th>처리상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="card-statements-table">
+                                <!-- JavaScript로 데이터 로드 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>회계 처리</h3>
+                    <div class="form-group">
+                        <label for="card-expense-account">지출 계정:</label>
+                        <select id="card-expense-account" class="account-select">
+                            <!-- JavaScript로 옵션 로드 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>처리할 항목:</label>
+                        <div id="card-expense-items" class="checkbox-group">
+                            <!-- JavaScript로 항목 로드 -->
+                        </div>
+                    </div>
+                    <button id="process-card-expenses">회계 처리</button>
+                </div>
+            </section>
+        </main>
+
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
