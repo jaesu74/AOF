@@ -27,6 +27,12 @@ header {
 
 header h1 {
     font-size: 24px;
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 14px;
+    opacity: 0.8;
 }
 
 nav {
@@ -119,6 +125,8 @@ button {
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 button:hover {
@@ -127,12 +135,12 @@ button:hover {
 
 .table-container {
     overflow-x: auto;
+    margin-top: 20px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
 th, td {
@@ -142,75 +150,23 @@ th, td {
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #f8f9fa;
     font-weight: 600;
 }
 
-.journal-line {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.totals {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #f2f2f2;
-    border-radius: 4px;
-    margin-top: 20px;
-}
-
-.totals div {
-    display: flex;
-    align-items: center;
-}
-
-.totals label {
-    margin-right: 10px;
-    margin-bottom: 0;
-}
-
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #4caf50;
-    color: white;
-    padding: 15px 25px;
+.form-container {
+    background-color: #f8f9fa;
+    padding: 20px;
     border-radius: 5px;
-    display: none;
-    z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.toast.error {
-    background-color: #f44336;
-}
-
-.toast.visible {
-    display: block;
-    animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-@keyframes fadein {
-    from { bottom: 0; opacity: 0; }
-    to { bottom: 20px; opacity: 1; }
-}
-
-@keyframes fadeout {
-    from { bottom: 20px; opacity: 1; }
-    to { bottom: 0; opacity: 0; }
-}
-
-/* 정보 박스 스타일 */
-.info-box {
-    background-color: #f0f7ff;
-    border-left: 4px solid #1a3b5d;
-    padding: 15px;
     margin-bottom: 20px;
-    border-radius: 4px;
+}
+
+.info-box {
+    background-color: #e8f4fd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #1a3b5d;
 }
 
 .info-box p {
@@ -222,63 +178,176 @@ th {
     margin-bottom: 10px;
 }
 
-/* 체크박스 그룹 스타일 */
+.journal-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.journal-line .form-group {
+    flex: 1 1 calc(25% - 10px);
+    min-width: 150px;
+}
+
+.totals {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.total {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
 .checkbox-group {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .checkbox-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
-.checkbox-item input[type="checkbox"] {
+.action-buttons {
+    margin-bottom: 20px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.toast.error {
+    background-color: #e74c3c;
+}
+
+/* 탭 스타일 */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+    background-color: transparent;
+    color: #666;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    color: #1a3b5d;
+    border-bottom-color: #1a3b5d;
+    background-color: transparent;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 차트 스타일 */
+.chart-container {
+    margin-bottom: 30px;
+}
+
+.chart {
+    height: 300px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insight-container {
+    margin-bottom: 30px;
+}
+
+#anomaly-insights {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+/* 카드 명세서 스타일 */
+.card-statements-container {
+    margin-top: 20px;
+}
+
+#unprocessed-statements {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.card-statement-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
+
+.card-statement-item:last-child {
+    border-bottom: none;
+}
+
+.card-statement-item input[type="checkbox"] {
     width: auto;
     margin-right: 10px;
 }
 
-/* 다운로드 링크 스타일 */
-.download-link {
-    color: #1a3b5d;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
-
-.download-link:hover {
-    text-decoration: underline;
-}
-
-.download-link:before {
-    content: '↓';
-    margin-right: 5px;
-}
-
-/* 반응형 조정 */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
+    .journal-line {
+        flex-direction: column;
     }
     
-    header {
+    .journal-line .form-group {
+        width: 100%;
+    }
+    
+    .form-container {
         padding: 15px;
     }
     
-    nav a {
-        padding: 10px 15px;
-    }
-    
-    .card {
-        padding: 15px;
-    }
-    
-    .form-group {
+    button {
+        width: 100%;
         margin-bottom: 10px;
     }
+}
+
+/* 문서 병합 선택 스타일 */
+#merge-document-list {
+    height: 150px;
+    overflow-y: auto;
 } 

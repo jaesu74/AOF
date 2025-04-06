@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllOneFlow API 문서</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            background-color: #1a3b5d;
+            color: white;
+            padding: 20px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 {
+            color: #1a3b5d;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .endpoint {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get {
+            background-color: #61affe;
+            color: white;
+        }
+        .post {
+            background-color: #49cc90;
+            color: white;
+        }
+        .endpoint-url {
+            font-family: monospace;
+            font-size: 1.1em;
+        }
+        .endpoint-desc {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #1a3b5d;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AllOneFlow API 문서</h1>
+            <p>API 버전: v1.0</p>
+        </header>
+
+        <section id="overview">
+            <h2>개요</h2>
+            <p>AllOneFlow API는 회계 관리, 계약 자동화, 보고서 생성 및 법인카드 관리를 위한 RESTful 엔드포인트를 제공합니다.</p>
+            <p>기본 URL: <code>https://api.aof.wvl.co.kr</code></p>
+        </section>
+
+        <section id="auth">
+            <h2>인증</h2>
+            <p>현재 버전에서는 API 키 인증이 필요하지 않습니다. 향후 릴리스에서 인증 메커니즘이 추가될 예정입니다.</p>
+        </section>
+
+        <section id="endpoints">
+            <h2>엔드포인트</h2>
+
+            <div class="endpoint">
+                <h3>회계연도 관리</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/fiscal-years</span>
+                </div>
+                <p class="endpoint-desc">모든 회계연도 목록을 조회합니다.</p>
+                <h4>응답 예시:</h4>
+                <pre><code>
+[
+  {
+    "id": 1,
+    "year": 2024,
+    "start_date": "2024-01-01T00:00:00",
+    "end_date": "2024-12-31T23:59:59",
+    "is_closed": false
+  }
+]
+                </code></pre>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/fiscal-years</span>
+                </div>
+                <p class="endpoint-desc">새로운 회계연도를 생성합니다.</p>
+                <h4>요청 예시:</h4>
+                <pre><code>
+{
+  "year": 2025
+}
+                </code></pre>
+                <h4>응답 예시:</h4>
+                <pre><code>
+{
+  "message": "회계연도가 성공적으로 생성되었습니다.",
+  "fiscal_year_id": 2,
+  "year": 2025,
+  "start_date": "2025-01-01T00:00:00",
+  "end_date": "2025-12-31T23:59:59"
+}
+                </code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3>계정과목 관리</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/accounts</span>
+                </div>
+                <p class="endpoint-desc">모든 계정과목을 조회합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/accounts</span>
+                </div>
+                <p class="endpoint-desc">새로운 계정과목을 생성합니다.</p>
+                <h4>요청 예시:</h4>
+                <pre><code>
+{
+  "code": "101",
+  "name": "현금",
+  "type": "ASSET",
+  "description": "현금 계정"
+}
+                </code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3>전표 관리</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/journal-entries</span>
+                </div>
+                <p class="endpoint-desc">새로운 전표를 생성합니다.</p>
+                <h4>요청 예시:</h4>
+                <pre><code>
+{
+  "entry_date": "2024-04-06",
+  "description": "사무용품 구매",
+  "created_by": "admin",
+  "lines": [
+    {
+      "account_id": 10,
+      "debit": 50000,
+      "credit": 0,
+      "description": "사무용품 구매"
+    },
+    {
+      "account_id": 1,
+      "debit": 0,
+      "credit": 50000,
+      "description": "현금 지출"
+    }
+  ]
+}
+                </code></pre>
+            </div>
+
+            <div class="endpoint">
+                <h3>보고서 생성</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/reports</span>
+                </div>
+                <p class="endpoint-desc">새로운 보고서를 생성합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/reports/download/{report_id}</span>
+                </div>
+                <p class="endpoint-desc">특정 보고서를 다운로드합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>계약 관리</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/contracts/standard/download</span>
+                </div>
+                <p class="endpoint-desc">표준 계약서를 다운로드합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/contracts/upload</span>
+                </div>
+                <p class="endpoint-desc">계약서를 업로드합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>법인카드 관리</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/card-statements/upload</span>
+                </div>
+                <p class="endpoint-desc">법인카드 명세서를 업로드합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/card-statements</span>
+                </div>
+                <p class="endpoint-desc">법인카드 명세서 목록을 조회합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <h3>회계 엑셀</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-url">/api/excel/accounting/download</span>
+                </div>
+                <p class="endpoint-desc">기본 회계 엑셀 파일을 다운로드합니다.</p>
+            </div>
+
+            <div class="endpoint">
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-url">/api/excel/upload</span>
+                </div>
+                <p class="endpoint-desc">엑셀 파일을 업로드합니다.</p>
+            </div>
+        </section>
+
+        <a href="https://aof.wvl.co.kr" class="back-link">← 메인 페이지로 돌아가기</a>
+    </div>
+</body>
+</html> 
