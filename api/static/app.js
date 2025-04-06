@@ -1,3 +1,6 @@
+// API 기본 URL 상수 정의
+const API_BASE_URL = 'https://api.aof.wvl.co.kr';
+
 document.addEventListener('DOMContentLoaded', function() {
     // 탭 전환 기능
     const navLinks = document.querySelectorAll('nav a');
@@ -88,7 +91,7 @@ function setCurrentDate() {
 
 // 회계연도 목록 로드
 function loadFiscalYears() {
-    fetch('/api/fiscal-years')
+    fetch(`${API_BASE_URL}/api/fiscal-years`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('fiscal-years-table');
@@ -124,7 +127,7 @@ function loadFiscalYears() {
 function createFiscalYear() {
     const year = document.getElementById('year').value;
     
-    fetch('/api/fiscal-years', {
+    fetch(`${API_BASE_URL}/api/fiscal-years`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -151,7 +154,7 @@ function closeFiscalYear(id) {
         return;
     }
     
-    fetch(`/api/fiscal-years/${id}/close`, {
+    fetch(`${API_BASE_URL}/api/fiscal-years/${id}/close`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -174,7 +177,7 @@ function closeFiscalYear(id) {
 
 // 계정과목 목록 로드
 function loadAccounts() {
-    fetch('/api/accounts')
+    fetch(`${API_BASE_URL}/api/accounts`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('accounts-table');
@@ -220,7 +223,7 @@ function createAccount() {
         return;
     }
     
-    fetch('/api/accounts', {
+    fetch(`${API_BASE_URL}/api/accounts`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -290,7 +293,7 @@ function removeJournalLine(button) {
 
 // 계정과목 선택 상자 업데이트
 function loadAccountsForSelect(selectElement) {
-    fetch('/api/accounts')
+    fetch(`${API_BASE_URL}/api/accounts`)
         .then(response => response.json())
         .then(data => {
             selectElement.innerHTML = '<option value="">계정과목 선택</option>';
@@ -399,7 +402,7 @@ function createJournalEntry() {
         lines
     };
     
-    fetch('/api/journal-entries', {
+    fetch(`${API_BASE_URL}/api/journal-entries`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -503,7 +506,7 @@ function initializeReportSection() {
 function loadFiscalYearsForSelect(selectId) {
     if (!document.getElementById(selectId)) return;
     
-    fetch('/api/fiscal-years')
+    fetch(`${API_BASE_URL}/api/fiscal-years`)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById(selectId);
@@ -532,7 +535,7 @@ function generateReport() {
     
     showToast('보고서 생성 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/reports', {
+    fetch(`${API_BASE_URL}/api/reports`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -562,7 +565,7 @@ function generateReport() {
 function loadReports() {
     if (!document.getElementById('reports-table')) return;
     
-    fetch('/api/reports')
+    fetch(`${API_BASE_URL}/api/reports`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('reports-table');
@@ -612,7 +615,7 @@ function initializeContractSection() {
 
 // 표준 근로계약서 다운로드
 function downloadStandardContract() {
-    window.location.href = '/api/contracts/standard/download';
+    window.location.href = `${API_BASE_URL}/api/contracts/standard/download`;
 }
 
 // 계약서 업로드
@@ -633,7 +636,7 @@ function uploadContract() {
     
     showToast('계약서 업로드 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/contracts/upload', {
+    fetch(`${API_BASE_URL}/api/contracts/upload`, {
         method: 'POST',
         body: formData
     })
@@ -658,7 +661,7 @@ function uploadContract() {
 function loadContracts() {
     if (!document.getElementById('contracts-table')) return;
     
-    fetch('/api/contracts')
+    fetch(`${API_BASE_URL}/api/contracts`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('contracts-table');
@@ -715,7 +718,7 @@ function uploadDocument() {
     
     showToast('문서 업로드 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/documents/upload', {
+    fetch(`${API_BASE_URL}/api/documents/upload`, {
         method: 'POST',
         body: formData
     })
@@ -751,7 +754,7 @@ function mergeDocuments() {
     
     showToast('문서 병합 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/documents/merge', {
+    fetch(`${API_BASE_URL}/api/documents/merge`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -784,7 +787,7 @@ function mergeDocuments() {
 function loadDocuments() {
     if (!document.getElementById('documents-table')) return;
     
-    fetch('/api/documents')
+    fetch(`${API_BASE_URL}/api/documents`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('documents-table');
@@ -820,7 +823,7 @@ function loadDocuments() {
 function updateMergeDocumentList() {
     if (!document.getElementById('merge-document-list')) return;
     
-    fetch('/api/documents')
+    fetch(`${API_BASE_URL}/api/documents`)
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('merge-document-list');
@@ -865,12 +868,12 @@ function initializeExcelSection() {
 
 // 기본 회계 엑셀 다운로드
 function downloadAccountingExcel() {
-    window.location.href = '/api/excel/accounting/download';
+    window.location.href = `${API_BASE_URL}/api/excel/accounting/download`;
 }
 
 // 커스텀 회계 엑셀 다운로드
 function downloadCustomExcel() {
-    window.location.href = '/api/excel/custom/download';
+    window.location.href = `${API_BASE_URL}/api/excel/custom/download`;
 }
 
 // 엑셀 파일 업로드
@@ -891,7 +894,7 @@ function uploadExcelFile() {
     
     showToast('엑셀 파일 업로드 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/excel/upload', {
+    fetch(`${API_BASE_URL}/api/excel/upload`, {
         method: 'POST',
         body: formData
     })
@@ -916,7 +919,7 @@ function uploadExcelFile() {
 function loadExcelFiles() {
     if (!document.getElementById('excel-files-table')) return;
     
-    fetch('/api/excel/files')
+    fetch(`${API_BASE_URL}/api/excel/files`)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('excel-files-table');
@@ -971,7 +974,7 @@ function uploadCardStatement() {
     
     showToast('명세서 업로드 및 분석 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/card-statements/upload', {
+    fetch(`${API_BASE_URL}/api/card-statements/upload`, {
         method: 'POST',
         body: formData
     })
@@ -1001,7 +1004,7 @@ function loadCardStatements() {
     if (!document.getElementById('card-statements-table')) return;
     
     const month = document.getElementById('card-statement-filter-month').value;
-    let url = '/api/card-statements';
+    let url = `${API_BASE_URL}/api/card-statements`;
     if (month) {
         url += `?month=${month}`;
     }
@@ -1046,7 +1049,7 @@ function updateCardExpenseItems() {
     if (!document.getElementById('card-expense-items')) return;
     
     const month = document.getElementById('card-statement-filter-month').value;
-    let url = '/api/card-statements/unprocessed';
+    let url = `${API_BASE_URL}/api/card-statements/unprocessed`;
     if (month) {
         url += `?month=${month}`;
     }
@@ -1093,7 +1096,7 @@ function processCardExpenses() {
     
     showToast('법인카드 지출 처리 중입니다. 잠시만 기다려주세요.');
     
-    fetch('/api/card-statements/process', {
+    fetch(`${API_BASE_URL}/api/card-statements/process`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

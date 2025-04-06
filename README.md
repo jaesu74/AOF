@@ -69,6 +69,125 @@
    # .env 파일을 열어 필요한 설정값 입력
    ```
 
+## 서버 배포 및 설정 방법
+
+### 서버 설정
+
+1. 웹 서버와 API 서버 설정
+   ```bash
+   # Nginx 설치 (Ubuntu 기준)
+   sudo apt update
+   sudo apt install nginx
+
+   # Nginx 설정
+   sudo nano /etc/nginx/sites-available/aof.wvl.co.kr
+   ```
+
+2. Nginx 설정 파일 예시
+   ```nginx
+   # 웹 서버 설정
+   server {
+       listen 80;
+       server_name aof.wvl.co.kr;
+       
+       location / {
+           root /var/www/aof/static;
+           index index.html;
+           try_files $uri $uri/ /index.html;
+       }
+   }
+
+   # API 서버 설정
+   server {
+       listen 80;
+       server_name api.aof.wvl.co.kr;
+       
+       location / {
+           proxy_pass http://localhost:5000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+3. Nginx 설정 활성화 및 재시작
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/aof.wvl.co.kr /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo service nginx restart
+   ```
+
+4. 인증서 설정 (HTTPS)
+   ```bash
+   sudo apt install certbot python3-certbot-nginx
+   sudo certbot --nginx -d aof.wvl.co.kr -d api.aof.wvl.co.kr
+   ```
+
+### 애플리케이션 배포
+
+1. 서버에 코드 배포
+   ```bash
+   cd /var/www
+   git clone https://github.com/jaesu74/AOF.git aof
+   cd aof
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. API 서버 실행 (Gunicorn 사용)
+   ```bash
+   pip install gunicorn
+   gunicorn -w 4 -b 0.0.0.0:5000 api.app:app
+   ```
+
+3. 서비스 자동 시작 설정 (systemd)
+   ```bash
+   sudo nano /etc/systemd/system/aof.service
+   ```
+   
+   서비스 파일 내용:
+   ```
+   [Unit]
+   Description=AOF API Server
+   After=network.target
+
+   [Service]
+   User=www-data
+   WorkingDirectory=/var/www/aof
+   ExecStart=/var/www/aof/venv/bin/gunicorn -w 4 -b 0.0.0.0:5000 api.app:app
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+4. 서비스 활성화 및 시작
+   ```bash
+   sudo systemctl enable aof
+   sudo systemctl start aof
+   sudo systemctl status aof
+   ```
+
+5. 정적 파일 복사
+   ```bash
+   mkdir -p /var/www/aof/static
+   cp -r api/static/* /var/www/aof/static/
+   ```
+
+6. 설정 업데이트 후 서비스 재시작
+   ```bash
+   sudo systemctl restart aof
+   ```
+
+### DNS 설정
+
+1. DNS 레코드 설정 (예: CloudFlare, Route53 등)
+   - aof.wvl.co.kr: 웹 서버 IP 주소
+   - api.aof.wvl.co.kr: API 서버 IP 주소
+
 ## 사용 방법
 
 1. 서버 실행
