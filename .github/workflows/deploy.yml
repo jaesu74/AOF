@@ -15,9 +15,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Check if CNAME exists
+        run: |
+          if [ ! -f "CNAME" ]; then
+            echo "aof.wvl.co.kr" > CNAME
+            echo "Created CNAME file"
+          fi
+          cat CNAME
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: .
+          target-folder: docs
           clean: true
