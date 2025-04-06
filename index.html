@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="3;url=api/static/index.html" />
+    <meta http-equiv="refresh" content="1;url=api/static/index.html" />
     <title>AllOneFlow - 페이지 이동</title>
     <style>
         body {
@@ -49,11 +49,24 @@
             color: #0066cc;
             text-decoration: none;
             font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid #0066cc;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
         .link:hover {
-            text-decoration: underline;
+            background-color: #0066cc;
+            color: white;
         }
     </style>
+    <script>
+        window.onload = function() {
+            // 자동 리다이렉트 백업
+            setTimeout(function() {
+                window.location.href = 'api/static/index.html';
+            }, 1500);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
