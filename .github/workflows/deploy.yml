@@ -15,21 +15,12 @@ jobs:
 
       - name: Setup files for GitHub Pages
         run: |
-          # 정적 파일 복사
-          mkdir -p public
-          cp -r api/static/* public/
-          cp index.html public/
-          
-          # API 문서 설정
-          mkdir -p public/docs
-          cp -r api/docs/* public/docs/
-          
           # CNAME 파일 복사
-          cp CNAME public/
+          cp CNAME .
           
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           branch: gh-pages
-          folder: public
+          folder: .
           clean: true 
